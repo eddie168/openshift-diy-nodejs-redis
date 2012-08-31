@@ -1,0 +1,11 @@
+{
+  "nodejs": {
+    "version": "v0.8.8",
+    "removeOld": false
+  },
+  "redis": {
+    "version": "2.4.17",
+    "port": 16379,
+    "removeOld": false
+  }
+}

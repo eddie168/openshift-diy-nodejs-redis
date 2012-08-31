@@ -1,0 +1,22 @@
+#!/bin/bash
+# The logic to stop your application should be put in this script.
+. ${OPENSHIFT_DATA_DIR}diy_env.sh
+# Stop Redis
+PIDFILE=${OPENSHIFT_RUN_DIR}redis.pid
+if [ ! -f $PIDFILE ]; then
+        echo "$PIDFILE does not exist, redis is not running"
+else
+        PID=$(cat $PIDFILE)
+        echo "Stopping Redis..."
+        redis-cli -p $REDIS_PORT shutdown
+        while [ -x /proc/${PID} ]
+        do
+            echo "Waiting for Redis to shutdown ..."
+            sleep 1
+        done
+        echo "Redis stopped"
+fi
+# Stop Node.js
+#kill `ps -ef | grep node | grep -v grep | awk '{ print $2 }'` > /dev/null 2>&1
+kill `ps -ef | grep supervisor | grep -v grep | awk '{ print $2 }'` > /dev/null 2>&1
+exit 0

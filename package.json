@@ -1,0 +1,40 @@
+{
+  "name": "openshift-diy-nodejs-redis",
+  "version": "1.0.0",
+  "description": "openshift-diy-nodejs-redis",
+  "keywords": [
+    "OpenShift",
+    "Node.js",
+    "Redis",
+    "openshift"
+  ],
+  "author": {
+    "name": "eddie168",
+    "email": "eddie168@gmail.com",
+    "url":  "https://github.com/eddie168"
+  },
+  "homepage": "https://github.com/eddie168/openshift-diy-nodejs-redis",
+  "repository": {
+    "type": "git",
+    "url": "https://gitub.com/eddie168/openshift-diy-nodejs-redis"
+  },
+
+  "engines": {
+    "node": ">= 0.8.0",
+    "npm": ">= 1.0.0"
+  },
+
+  "dependencies": {
+    "express": "2.5.11",
+    "redis": "*",
+    "hiredis": "*"
+  },
+  "devDependencies": {},
+  "bundleDependencies": [],
+
+  "private": true,
+
+  "scripts": {  
+   "start": "node server.js"
+  }
+}
