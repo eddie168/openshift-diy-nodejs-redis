@@ -9,6 +9,7 @@ NODE_VERSION=`node -e 'var config_diy=require("./config_diy");console.log(config
 NODE_REMOVE_OLD=`node -e 'var config_diy=require("./config_diy");console.log(config_diy.nodejs.removeOld)'`
 REDIS_VERSION=`node -e 'var config_diy=require("./config_diy");console.log(config_diy.redis.version)'`
 REDIS_PORT=`node -e 'var config_diy=require("./config_diy");console.log(config_diy.redis.port)'`
+REDIS_LOGLEVEL=`node -e 'var config_diy=require("./config_diy");console.log(config_diy.redis.loglevel)'`
 REDIS_REMOVE_OLD=`node -e 'var config_diy=require("./config_diy");console.log(config_diy.redis.removeOld)'`
 
 # Prepare Node.js
@@ -91,7 +92,7 @@ if [ ! -e ${OPENSHIFT_DATA_DIR}redis-${REDIS_VERSION}/bin/redis-server ]; then
 fi
 
 # Create redis.conf
-cat ${OPENSHIFT_DATA_DIR}redis-${REDIS_VERSION}/redis.conf.orig | sed -e "s#daemonize no#daemonize yes#" -e "s#pidfile /var/run/redis.pid#pidfile ${OPENSHIFT_RUN_DIR}redis.pid#"  -e "s#port 6379#port ${REDIS_PORT}#" -e "s#dir ./#dir ${OPENSHIFT_DATA_DIR}redis-${REDIS_VERSION}/data#" -e "s#logfile stdout#logfile ${OPENSHIFT_LOG_DIR}redis.log#" > ${OPENSHIFT_DATA_DIR}redis-${REDIS_VERSION}/redis.conf
+cat ${OPENSHIFT_DATA_DIR}redis-${REDIS_VERSION}/redis.conf.orig | sed -e "s#daemonize no#daemonize yes#" -e "s#pidfile /var/run/redis.pid#pidfile ${OPENSHIFT_RUN_DIR}redis.pid#"  -e "s#port 6379#port ${REDIS_PORT}#" -e "s#dir ./#dir ${OPENSHIFT_DATA_DIR}redis-${REDIS_VERSION}/data#" -e "s#logfile stdout#logfile ${OPENSHIFT_LOG_DIR}redis.log#" -e "s#loglevel verbose#loglevel ${REDIS_LOGLEVEL}#"> ${OPENSHIFT_DATA_DIR}redis-${REDIS_VERSION}/redis.conf
 
 # Create environment variables for this version
 cat <<EOF > ${OPENSHIFT_DATA_DIR}diy_env.sh

@@ -62,6 +62,7 @@ Edit `config_diy.json`
       "redis": {
         "version": "2.4.17",
         "port": 16379,
+        "loglevel": "notice",
         "removeOld": false
       }
     }
@@ -70,6 +71,7 @@ Edit `config_diy.json`
 - `nodejs.removeOld`: delete previous installed node.js binarys
 - `redis.version`: change redis version
 - `redis.port`: port used by redis (Refer to [here](https://openshift.redhat.com/community/kb/kb-e1038-i-cant-bind-to-a-port))
+- `redis.loglevel`: `debug`, `verbose`, `notice`, or `warning`
 - `redis.removeOld`: delete previous installed redis binarys
 
 `commit` and then `push` to reflect the changes to the OpenShift app.

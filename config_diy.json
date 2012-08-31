@@ -6,6 +6,7 @@
   "redis": {
     "version": "2.4.17",
     "port": 16379,
+    "loglevel": "notice",
     "removeOld": false
   }
 }
