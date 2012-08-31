@@ -1,5 +1,5 @@
-openshift-diy-nodejs08
-========================
+openshift-diy-nodejs-redis
+==========================
 
 Thanks for the great work by [razorinc](https://github.com/razorinc/redis-openshift-example) and [creationix](https://github.com/creationix/nvm/), this repo let you test Node.js (v0.8 and above) with Redis in a OpenShift DIY application. For Node.js, it will first check for pre-compiled linux version, then compile from source if not found. Redis will be compiled from source code. Subsequent `push` will skip source code compile unless a new version is specified.
 
@@ -79,7 +79,7 @@ Edit `config_diy.json`
 Use Redis in Node.js
 --------------------
 
-An environment variable `REDIS_PORT` is defined. Simply connect to Redis server with `REDIS_PORT`. For example, using `[node-redis](https://github.com/mranney/node_redis)`
+An environment variable `REDIS_PORT` is defined. Simply connect to Redis server with `REDIS_PORT`. For example, using [node-redis](https://github.com/mranney/node_redis)
 
     var redis = require("redis");
     var redisClient = redis.createClient(process.env.REDIS_PORT);
