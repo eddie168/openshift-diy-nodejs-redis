@@ -8,7 +8,7 @@ if [ ! -f $PIDFILE ]; then
 else
         PID=$(cat $PIDFILE)
         echo "Stopping Redis..."
-        redis-cli -p $REDIS_PORT shutdown
+        redis-cli -h $REDIS_IP -p $REDIS_PORT shutdown
         while [ -x /proc/${PID} ]
         do
             echo "Waiting for Redis to shutdown ..."

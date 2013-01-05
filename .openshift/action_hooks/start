@@ -14,7 +14,7 @@ if [ -s $LOG_FILE ]; then
   MODIFY=`stat -c "%Y" $LOG_FILE`
   # Convert to time stamp
   STAMP=`date -d @$MODIFY "+%Y%m%d-%H%M%S"`
-  mv -f $LOG_FILE ${LOG_FILE}.log.${STAMP}
+  mv -f $LOG_FILE ${LOG_FILE}.${STAMP}
 fi
 # Backup redis.log if exist
 REDIS_LOG_FILE=${OPENSHIFT_DIY_LOG_DIR}redis.log
@@ -23,7 +23,7 @@ if [ -s $REDIS_LOG_FILE ]; then
   MODIFY=`stat -c "%Y" $REDIS_LOG_FILE`
   # Convert to time stamp
   STAMP=`date -d @$MODIFY "+%Y%m%d-%H%M%S"`
-  mv -f $REDIS_LOG_FILE ${REDIS_LOG_FILE}.log.${STAMP}
+  mv -f $REDIS_LOG_FILE ${REDIS_LOG_FILE}.${STAMP}
 fi
 echo "Node Version:"
 node -e 'console.log(process.versions);'
@@ -35,4 +35,4 @@ redis-server ${OPENSHIFT_DATA_DIR}/redis-${REDIS_VERSION}/redis.conf
 
 # Use supervisor to keep node app running after crash
 echo "nohup supervisor $APP_FILE >$LOG_FILE 2>&1 &"
-nohup supervisor -w $APP_FILE $APP_FILE >$LOG_FILE 2>&1 &
+nohup supervisor -w . $APP_FILE >$LOG_FILE 2>&1 &

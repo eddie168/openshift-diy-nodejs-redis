@@ -74,7 +74,7 @@ Edit `config_diy.json`
 - `redis.port`: port used by redis (Refer to [here](https://openshift.redhat.com/community/kb/kb-e1038-i-cant-bind-to-a-port))
 - `redis.loglevel`: `debug`, `verbose`, `notice`, or `warning`
 - `redis.removeOld`: delete previous installed redis binarys
-- `cartridge_name`: Used internally to create $OPENSHIFT_RUN_DIR
+- `cartridge_name`: Used internally to create `$OPENSHIFT_RUN_DIR`
 
 `commit` and then `push` to reflect the changes to the OpenShift app.
 
@@ -83,7 +83,7 @@ Edit `config_diy.json`
 Use Redis in Node.js
 --------------------
 
-Environment variables `REDIS_IP` (which is based on $OPENSHIFT_INTERNAL_IP when app is started) and `REDIS_PORT` are defined. Simply connect to Redis server with `REDIS_IP` and `REDIS_PORT`. For example, using [node-redis](https://github.com/mranney/node_redis)
+Environment variables `REDIS_IP` (which is based on `$OPENSHIFT_INTERNAL_IP` when app is started) and `REDIS_PORT` are defined. Simply connect to Redis server with `REDIS_IP` and `REDIS_PORT`. For example, using [node-redis](https://github.com/mranney/node_redis)
 
     var redis = require("redis");
     var redisClient = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_IP);
