@@ -31,21 +31,21 @@ Check the end of the message for Node.js and Redis version:
     remote: Starting application...
     remote: Node Version:
     remote: { http_parser: '1.0',
-    remote:   node: '0.8.8',
-    remote:   v8: '3.11.10.19',
+    remote:   node: '0.8.16',
+    remote:   v8: '3.11.10.25',
     remote:   ares: '1.7.5-DEV',
     remote:   uv: '0.8',
     remote:   zlib: '1.2.3',
     remote:   openssl: '1.0.0f' }
     remote: Redis Version:
-    remote: redis-cli 2.4.17
-    remote: nohup supervisor server.js >/var/lib/stickshift/xxxxxxxxxxxxxxxxxx/yourapp/logs/server.log 2>&1 &
+    remote: redis-cli 2.6.7
+    remote: nohup supervisor server.js >/var/lib/stickshift/xxxxxxxxxxxxxxxxxx/diy-0.1/logs/server.log 2>&1 &
     remote: Done
 
-In this case it is node `v0.8.8` and redis `2.4.17`
+In this case it is node `v0.8.16` and redis `2.6.7`
 
-You can find node.js app's log at `$OPENSHIFT_LOG_DIR/server.log`. Subsequent `push` will rename the log file with a time stamp before overwritten. The same goes to Redis log file and can be found at `$OPENSHIFT_LOG_DIR/redis.log`. 
-You should be able to see these log files with `rhc app tail -a yourapp`.
+You can find node.js app's log at `$OPENSHIFT_DIY_LOG_DIR/server.log`. Subsequent `push` will rename the log file with a time stamp before overwritten. The same goes to Redis log file and can be found at `$OPENSHIFT_DIY_LOG_DIR/redis.log`. 
+You should be able to see these log files with `rhc tail -a yourapp`.
 
 Now open your openshift app in browser and you should see the standard openshift sample page. Enjoy!!
 
@@ -56,15 +56,16 @@ Edit `config_diy.json`
 
     {
       "nodejs": {
-        "version": "v0.8.8",
+        "version": "v0.8.16",
         "removeOld": false
       },
       "redis": {
-        "version": "2.4.17",
+        "version": "2.6.7",
         "port": 16379,
         "loglevel": "notice",
         "removeOld": false
-      }
+      },
+      "cartridge_name": "diy-0.1"
     }
 
 - `nodejs.version`: change node.js version (keep the `v` letter in front)
@@ -73,6 +74,7 @@ Edit `config_diy.json`
 - `redis.port`: port used by redis (Refer to [here](https://openshift.redhat.com/community/kb/kb-e1038-i-cant-bind-to-a-port))
 - `redis.loglevel`: `debug`, `verbose`, `notice`, or `warning`
 - `redis.removeOld`: delete previous installed redis binarys
+- `cartridge_name`: Used internally to create $OPENSHIFT_RUN_DIR
 
 `commit` and then `push` to reflect the changes to the OpenShift app.
 
@@ -81,8 +83,8 @@ Edit `config_diy.json`
 Use Redis in Node.js
 --------------------
 
-An environment variable `REDIS_PORT` is defined. Simply connect to Redis server with `REDIS_PORT`. For example, using [node-redis](https://github.com/mranney/node_redis)
+Environment variables `REDIS_IP` (which is based on $OPENSHIFT_INTERNAL_IP when app is started) and `REDIS_PORT` are defined. Simply connect to Redis server with `REDIS_IP` and `REDIS_PORT`. For example, using [node-redis](https://github.com/mranney/node_redis)
 
     var redis = require("redis");
-    var redisClient = redis.createClient(process.env.REDIS_PORT);
+    var redisClient = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_IP);
 

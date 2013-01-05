@@ -11,11 +11,12 @@ REDIS_VERSION=`node -e 'var config_diy=require("./config_diy");console.log(confi
 REDIS_PORT=`node -e 'var config_diy=require("./config_diy");console.log(config_diy.redis.port)'`
 REDIS_LOGLEVEL=`node -e 'var config_diy=require("./config_diy");console.log(config_diy.redis.loglevel)'`
 REDIS_REMOVE_OLD=`node -e 'var config_diy=require("./config_diy");console.log(config_diy.redis.removeOld)'`
+REDIS_IP=${OPENSHIFT_INTERNAL_IP}
 CARTRIDGE_NAME=`node -e 'var config_diy=require("./config_diy");console.log(config_diy.cartridge_name)'`
 
 # 20130105: Openshift removed OPENSHIFT_RUN_DIR, so need to manually create it
 if [ -z $OPENSHIFT_RUN_DIR ]; then
-  export OPENSHIFT_RUN_DIR=${OPENSHIFT_HOMDIR}${CARTRIDGE_NAME}/run/
+  export OPENSHIFT_RUN_DIR=${OPENSHIFT_HOMEDIR}${CARTRIDGE_NAME}/run/
 fi
 
 # Prepare Node.js
@@ -99,11 +100,14 @@ fi
 
 # Create redis.conf
 cat ${OPENSHIFT_DATA_DIR}redis-${REDIS_VERSION}/redis.conf.orig | sed -e "s#daemonize no#daemonize yes#" -e "s#pidfile /var/run/redis.pid#pidfile ${OPENSHIFT_RUN_DIR}redis.pid#"  -e "s#port 6379#port ${REDIS_PORT}#" -e "s#dir ./#dir ${OPENSHIFT_DATA_DIR}redis-${REDIS_VERSION}/data#" -e "s#logfile stdout#logfile ${OPENSHIFT_DIY_LOG_DIR}redis.log#" -e "s#loglevel verbose#loglevel ${REDIS_LOGLEVEL}#"> ${OPENSHIFT_DATA_DIR}redis-${REDIS_VERSION}/redis.conf
+# 20130105: Openshift seems blocked binding to localhost or 127.0.0.1
+echo "bind ${REDIS_IP}" >> ${OPENSHIFT_DATA_DIR}redis-${REDIS_VERSION}/redis.conf
 
 # Create environment variables for this version
 cat <<EOF > ${OPENSHIFT_DATA_DIR}diy_env.sh
 export NODE_VERSION=${NODE_VERSION}
 export REDIS_VERSION=${REDIS_VERSION}
+export REDIS_IP=${REDIS_IP}
 export REDIS_PORT=${REDIS_PORT}
 export TMPDIR=\${OPENSHIFT_TMP_DIR}
 if [ -z \$NODE_DEFINED ]; then
@@ -116,7 +120,7 @@ if [ -z \$NODE_DEFINED ]; then
   export NODE_ENV=production
 fi
 if [ -z \$OPENSHIFT_RUN_DIR ]; then
-  export OPENSHIFT_RUN_DIR=\${OPENSHIFT_HOMDIR}${CARTRIDGE_NAME}/run/
+  export OPENSHIFT_RUN_DIR=\${OPENSHIFT_HOMEDIR}${CARTRIDGE_NAME}/run/
 fi
 EOF
 chmod +x ${OPENSHIFT_DATA_DIR}diy_env.sh
