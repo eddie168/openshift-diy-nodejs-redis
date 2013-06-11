@@ -11,7 +11,7 @@ REDIS_VERSION=`node -e 'var config_diy=require("./config_diy");console.log(confi
 REDIS_PORT=`node -e 'var config_diy=require("./config_diy");console.log(config_diy.redis.port)'`
 REDIS_LOGLEVEL=`node -e 'var config_diy=require("./config_diy");console.log(config_diy.redis.loglevel)'`
 REDIS_REMOVE_OLD=`node -e 'var config_diy=require("./config_diy");console.log(config_diy.redis.removeOld)'`
-REDIS_IP=${OPENSHIFT_INTERNAL_IP}
+REDIS_IP=${OPENSHIFT_DIY_IP}
 CARTRIDGE_NAME=`node -e 'var config_diy=require("./config_diy");console.log(config_diy.cartridge_name)'`
 
 # 20130105: Openshift removed OPENSHIFT_RUN_DIR, so need to manually create it
