@@ -1,13 +1,13 @@
 {
   "nodejs": {
-    "version": "v0.8.16",
-    "removeOld": false
+    "use_iojs": true,
+    "version": "v1.1.0",
+    "removeOld": true
   },
   "redis": {
-    "version": "2.6.7",
+    "version": "2.8.19",
     "port": 16379,
     "loglevel": "notice",
-    "removeOld": false
-  },
-  "cartridge_name": "diy-0.1"
+    "removeOld": true
+  }
 }

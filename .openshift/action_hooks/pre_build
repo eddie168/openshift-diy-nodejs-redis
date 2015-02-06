@@ -5,6 +5,7 @@
 # could be python, php, ruby, etc.
 
 cd ${OPENSHIFT_REPO_DIR}
+NODE_USE_IOJS=`node -e 'var config_diy=require("./config_diy");console.log(config_diy.nodejs.use_iojs)'`
 NODE_VERSION=`node -e 'var config_diy=require("./config_diy");console.log(config_diy.nodejs.version)'`
 NODE_REMOVE_OLD=`node -e 'var config_diy=require("./config_diy");console.log(config_diy.nodejs.removeOld)'`
 REDIS_VERSION=`node -e 'var config_diy=require("./config_diy");console.log(config_diy.redis.version)'`
@@ -12,12 +13,9 @@ REDIS_PORT=`node -e 'var config_diy=require("./config_diy");console.log(config_d
 REDIS_LOGLEVEL=`node -e 'var config_diy=require("./config_diy");console.log(config_diy.redis.loglevel)'`
 REDIS_REMOVE_OLD=`node -e 'var config_diy=require("./config_diy");console.log(config_diy.redis.removeOld)'`
 REDIS_IP=${OPENSHIFT_DIY_IP}
-CARTRIDGE_NAME=`node -e 'var config_diy=require("./config_diy");console.log(config_diy.cartridge_name)'`
 
 # 20130105: Openshift removed OPENSHIFT_RUN_DIR, so need to manually create it
-if [ -z $OPENSHIFT_RUN_DIR ]; then
-  export OPENSHIFT_RUN_DIR=${OPENSHIFT_HOMEDIR}${CARTRIDGE_NAME}/run/
-fi
+export OPENSHIFT_RUN_DIR=${OPENSHIFT_HOMEDIR}diy/run/
 
 # Prepare Node.js
 if [ ! -e ${OPENSHIFT_DATA_DIR}node-${NODE_VERSION}/bin/node ]; then
@@ -29,24 +27,38 @@ if [ ! -e ${OPENSHIFT_DATA_DIR}node-${NODE_VERSION}/bin/node ]; then
   cd ${OPENSHIFT_TMP_DIR}
   # Determine hardware type for pre-compiled linux binary
   if [ "`uname -i`" == "x86_64" ]; then
-    TYPE="x64"
+    TYPE="linux-x64"
   else
-    TYPE="x86"
+    TYPE="linux-x86"
   fi
-  BINARY="http://nodejs.org/dist/$NODE_VERSION/node-$NODE_VERSION-linux-$TYPE.tar.gz"
+  # Determine node.js or io.js
+  if [ $NODE_USE_IOJS == "true" ]; then
+    BINARY="https://iojs.org/dist/$NODE_VERSION/iojs-$NODE_VERSION-$TYPE.tar.gz"
+  else
+    BINARY="http://nodejs.org/dist/$NODE_VERSION/node-$NODE_VERSION-$TYPE.tar.gz"
+  fi
   # Check pre-compiled linux binary
   if [ "`curl -Is $BINARY | grep '200 OK'`" != '' ]; then
-    curl -L -o node-${NODE_VERSION}-linux-${TYPE}.tar.gz $BINARY
-    tar -xvzf node-${NODE_VERSION}-linux-${TYPE}.tar.gz
-    mv node-${NODE_VERSION}-linux-${TYPE} ${OPENSHIFT_DATA_DIR}node-${NODE_VERSION}
-    rm -f node-${NODE_VERSION}-linux-${TYPE}.tar.gz
+    if [ $NODE_USE_IOJS == "true" ]; then
+      curl -L -o iojs-${NODE_VERSION}-${TYPE}.tar.gz $BINARY
+      tar -xvzf iojs-${NODE_VERSION}-${TYPE}.tar.gz
+      mv iojs-${NODE_VERSION}-${TYPE} ${OPENSHIFT_DATA_DIR}node-${NODE_VERSION}
+      rm -f iojs-${NODE_VERSION}-${TYPE}.tar.gz
+    else
+      curl -L -o node-${NODE_VERSION}-${TYPE}.tar.gz $BINARY
+      tar -xvzf node-${NODE_VERSION}-${TYPE}.tar.gz
+      mv node-${NODE_VERSION}-${TYPE} ${OPENSHIFT_DATA_DIR}node-${NODE_VERSION}
+      rm -f node-${NODE_VERSION}-${TYPE}.tar.gz
+    fi
   else
     # Don't have pre-compiled binary, compile from source. Determine tarball url
+    # default to node.js v0.10.36
     tarball=''
     if [ "`curl -Is "http://nodejs.org/dist/$NODE_VERSION/node-$NODE_VERSION.tar.gz" | grep '200 OK'`" != '' ]; then
       tarball="http://nodejs.org/dist/$NODE_VERSION/node-$NODE_VERSION.tar.gz"
-    elif [ "`curl -Is "http://nodejs.org/dist/node-$NODE_VERSION.tar.gz" | grep '200 OK'`" != '' ]; then
-      tarball="http://nodejs.org/dist/node-$NODE_VERSION.tar.gz"
+    elif [ "`curl -Is "http://nodejs.org/dist/v0.10.36/node-v0.10.36.tar.gz" | grep '200 OK'`" != '' ]; then
+      export NODE_VERSION="v0.10.36"
+      tarball="http://nodejs.org/dist/$NODE_VERSION/node-$NODE_VERSION.tar.gz"
     fi
     # Check is tarball already download and extracted
     if [ ! -d node-${NODE_VERSION} ]; then
@@ -73,8 +85,8 @@ if [ ! -e ${OPENSHIFT_DATA_DIR}redis-${REDIS_VERSION}/bin/redis-server ]; then
   fi
   cd ${OPENSHIFT_TMP_DIR}
   tarball=''
-  if [ "`curl -Is "http://redis.googlecode.com/files/redis-${REDIS_VERSION}.tar.gz" | grep '200 OK'`" != '' ]; then
-    tarball="http://redis.googlecode.com/files/redis-${REDIS_VERSION}.tar.gz"
+  if [ "`curl -Is "http://download.redis.io/releases/redis-${REDIS_VERSION}.tar.gz" | grep '200 OK'`" != '' ]; then
+    tarball="http://download.redis.io/releases/redis-${REDIS_VERSION}.tar.gz"
   else
     tarball="http://download.redis.io/redis-stable.tar.gz"
     REDIS_VERSION="stable"
@@ -119,9 +131,7 @@ if [ -z \$NODE_DEFINED ]; then
   export npm_config_tmp=\${OPENSHIFT_TMP_DIR}
   export NODE_ENV=production
 fi
-if [ -z \$OPENSHIFT_RUN_DIR ]; then
-  export OPENSHIFT_RUN_DIR=\${OPENSHIFT_HOMEDIR}${CARTRIDGE_NAME}/run/
-fi
+export OPENSHIFT_RUN_DIR=${OPENSHIFT_HOMEDIR}diy/run/
 EOF
 chmod +x ${OPENSHIFT_DATA_DIR}diy_env.sh
 
