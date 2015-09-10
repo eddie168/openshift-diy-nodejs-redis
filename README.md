@@ -32,19 +32,19 @@ Check the end of the message for io.js/node.js and Redis version:
 
     remote: Starting DIY cartridge
     remote: Node Version:
-    remote: { http_parser: '2.3.0',
-    remote:   node: '1.1.0',
-    remote:   v8: '4.1.0.14',
-    remote:   uv: '1.3.0',
+    remote: { http_parser: '2.5.0',
+    remote:   node: '4.0.0',
+    remote:   v8: '4.5.103.30',
+    remote:   uv: '1.7.3',
     remote:   zlib: '1.2.8',
-    remote:   ares: '1.10.0-DEV',
-    remote:   modules: '43',
-    remote:   openssl: '1.0.1k' }
+    remote:   ares: '1.10.1-DEV',
+    remote:   modules: '46',
+    remote:   openssl: '1.0.2d' }
     remote: Redis Version:
-    remote: redis-cli 2.8.19
+    remote: redis-cli 3.0.4
     remote: nohup supervisor server.js >/var/lib/openshift/xxxxxxxxxxxxxxxxxx/app-root/logs/server.log 2>&1 &
 
-In this case it is io.js `v1.1.0` and redis `2.8.19`
+In this case it is node.js `v4.0.0` and redis `3.0.4`
 
 To check is redis working
 
