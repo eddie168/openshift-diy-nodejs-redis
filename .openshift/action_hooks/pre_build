@@ -35,7 +35,7 @@ if [ ! -e ${OPENSHIFT_DATA_DIR}node-${NODE_VERSION}/bin/node ]; then
   if [ $NODE_USE_IOJS == "true" ]; then
     BINARY="https://iojs.org/dist/$NODE_VERSION/iojs-$NODE_VERSION-$TYPE.tar.gz"
   else
-    BINARY="http://nodejs.org/dist/$NODE_VERSION/node-$NODE_VERSION-$TYPE.tar.gz"
+    BINARY="https://nodejs.org/dist/$NODE_VERSION/node-$NODE_VERSION-$TYPE.tar.gz"
   fi
   # Check pre-compiled linux binary
   if [ "`curl -Is $BINARY | grep '200 OK'`" != '' ]; then
@@ -54,11 +54,11 @@ if [ ! -e ${OPENSHIFT_DATA_DIR}node-${NODE_VERSION}/bin/node ]; then
     # Don't have pre-compiled binary, compile from source. Determine tarball url
     # default to node.js v0.10.36
     tarball=''
-    if [ "`curl -Is "http://nodejs.org/dist/$NODE_VERSION/node-$NODE_VERSION.tar.gz" | grep '200 OK'`" != '' ]; then
-      tarball="http://nodejs.org/dist/$NODE_VERSION/node-$NODE_VERSION.tar.gz"
-    elif [ "`curl -Is "http://nodejs.org/dist/v0.10.36/node-v0.10.36.tar.gz" | grep '200 OK'`" != '' ]; then
+    if [ "`curl -Is "https://nodejs.org/dist/$NODE_VERSION/node-$NODE_VERSION.tar.gz" | grep '200 OK'`" != '' ]; then
+      tarball="https://nodejs.org/dist/$NODE_VERSION/node-$NODE_VERSION.tar.gz"
+    elif [ "`curl -Is "https://nodejs.org/dist/v0.10.36/node-v0.10.36.tar.gz" | grep '200 OK'`" != '' ]; then
       export NODE_VERSION="v0.10.36"
-      tarball="http://nodejs.org/dist/$NODE_VERSION/node-$NODE_VERSION.tar.gz"
+      tarball="https://nodejs.org/dist/$NODE_VERSION/node-$NODE_VERSION.tar.gz"
     fi
     # Check is tarball already download and extracted
     if [ ! -d node-${NODE_VERSION} ]; then
