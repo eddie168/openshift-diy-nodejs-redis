@@ -1,11 +1,11 @@
 {
   "nodejs": {
-    "use_iojs": true,
-    "version": "v1.1.0",
+    "use_iojs": false,
+    "version": "v4.0.0",
     "removeOld": true
   },
   "redis": {
-    "version": "2.8.19",
+    "version": "3.0.4",
     "port": 16379,
     "loglevel": "notice",
     "removeOld": true
